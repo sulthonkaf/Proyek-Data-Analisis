@@ -101,15 +101,22 @@ if "order_status" in main_df.columns:
 # -------------------- Lokasi Pelanggan --------------------
 st.subheader("Distribusi Lokasi Pelanggan (Sample)")
 
-# Coba cari nama kolom latitude & longitude
+# Coba cari nama kolom latitude & longitude secara dinamis
 lat_col = next((col for col in main_df.columns if 'lat' in col.lower()), None)
 lng_col = next((col for col in main_df.columns if 'lng' in col.lower() or 'lon' in col.lower()), None)
 
 if lat_col and lng_col:
+    # Buang nilai NaN dari kolom koordinat
     geo_df = main_df.dropna(subset=[lat_col, lng_col])
+
     if not geo_df.empty:
+        # Ambil sampel 1000 titik lokasi (agar performa tetap cepat)
         geo_df = geo_df.sample(min(1000, len(geo_df)))
+
+        # Buat peta Brazil sebagai default
         m = folium.Map(location=[-14.2, -51.9], zoom_start=4)
+
+        # Tambahkan marker ke peta
         for _, row in geo_df.iterrows():
             folium.CircleMarker(
                 location=[row[lat_col], row[lng_col]],
@@ -118,12 +125,13 @@ if lat_col and lng_col:
                 fill=True,
                 fill_opacity=0.5
             ).add_to(m)
-        st.markdown(f"Menampilkan peta interaktif dengan sampel {len(geo_df)} titik lokasi pelanggan.")
+
+        st.markdown(f"✅ Menampilkan peta interaktif dengan sampel **{len(geo_df)} titik lokasi pelanggan**.")
         st_folium(m, width=700, height=450)
     else:
-        st.info("Tidak ada data lokasi yang valid untuk ditampilkan.")
+        st.info("⚠️ Tidak ada data lokasi yang valid untuk ditampilkan.")
 else:
-    st.warning("Kolom latitude/longitude tidak ditemukan dalam dataset.")
+    st.warning("❌ Kolom latitude/longitude tidak ditemukan dalam dataset. Pastikan dataset memiliki kolom seperti `geolocation_lat`, `geolocation_lng`, dll.")
 
 
 # -------------------- Review dan Wordcloud --------------------
