@@ -143,12 +143,13 @@ if "product_category_name_english" in main_df.columns:
     st.subheader("Top 10 Kategori Produk Terlaris")
     top_kategori = filtered_df["product_category_name_english"].value_counts().head(10)
 
-    fig_kat, ax_kat = plt.subplots()
-    sns.barplot(x=top_kategori.values, y=top_kategori.index, palette="Set2", ax=ax_kat)
+    fig_kat, ax_kat = plt.subplots(figsize=(10, 6))
+    sns.barplot(x=top_kategori.index, y=top_kategori.values, palette="Set2", ax=ax_kat)
     ax_kat.set_title("Kategori Produk dengan Pembelian Tertinggi")
-    ax_kat.set_xlabel("Jumlah Pembelian")
-    ax_kat.set_ylabel("Kategori")
-    st.pyplot(fig_kat)
+    ax_kat.set_ylabel("Jumlah Pembelian")
+    ax_kat.set_xlabel("Kategori Produk")
+    ax_kat.tick_params(axis='x', rotation=45)
+
 
     st.subheader("Ekspor Data")
     if st.button("Download Top Kategori CSV"):
