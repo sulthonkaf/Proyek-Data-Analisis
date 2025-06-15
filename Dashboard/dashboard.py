@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import folium
+import zipfile
 from streamlit_folium import st_folium
 from wordcloud import WordCloud
 from io import StringIO
@@ -32,13 +33,18 @@ Dashboard ini dibuat untuk menganalisis dataset publik E-Commerce Brazil, melipu
 """)
 
 # -------------------- Load Dataset --------------------
+
+
 @st.cache_data
 def load_main_data():
-    data_path = "Dashboard/main_data.csv"  
-    if os.path.exists(data_path):
-        return pd.read_csv(data_path, low_memory=False)
-    st.error("File main_data.csv tidak ditemukan di " + data_path)
+    zip_path = "Dashboard/main_data.zip"
+    if os.path.exists(zip_path):
+        with zipfile.ZipFile(zip_path) as z:
+            with z.open("main_data.csv") as f:
+                return pd.read_csv(f, low_memory=False)
+    st.error("File main_data.zip tidak ditemukan.")
     return pd.DataFrame()
+
 
 main_df = load_main_data()
 
