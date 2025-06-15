@@ -149,8 +149,13 @@ if "product_category_name_english" in main_df.columns:
     ax_kat.set_ylabel("Jumlah Pembelian")
     ax_kat.set_xlabel("Kategori Produk")
     ax_kat.tick_params(axis='x', rotation=45)
+
+    # Tambahkan label angka di atas bar
+    for i, v in enumerate(top_kategori.values):
+        ax_kat.text(i, v + 100, str(v), ha='center', fontsize=9)
+
     st.pyplot(fig_kat)
-    st.markdown("Gunakan warna hijau netral yang konsisten dan tidak mencolok agar informasi tetap utama.")
+    st.markdown("Visualisasi menggunakan warna netral dan orientasi vertikal agar memudahkan pembacaan dan menghindari gangguan visual.")
 
     st.subheader("Ekspor Data")
     if st.button("Download Top Kategori CSV"):
@@ -164,6 +169,7 @@ if "product_category_name_english" in main_df.columns:
             file_name="top_kategori_produk.csv",
             mime="text/csv"
         )
+
 
 # -------------------- Footer --------------------
 st.markdown("---")
