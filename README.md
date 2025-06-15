@@ -36,8 +36,8 @@ Proyek ini disusun dalam rangka **DBS Coding Camp 2025**.
 ### 1. Kloning Repository
 
 ```bash
-git clone https://github.com/sulthonkaf/dbs-codingcamp-2025.git
-cd dbs-codingcamp-2025
+git clone https://github.com/sulthonkaf/Proyek-Data-Analisis.git
+cd Proyek-Data-Analisis
 ```
 
 ### 2. Install Dependencies
