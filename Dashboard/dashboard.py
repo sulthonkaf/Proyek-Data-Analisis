@@ -33,8 +33,6 @@ Dashboard ini dibuat untuk menganalisis dataset publik E-Commerce Brazil, melipu
 """)
 
 # -------------------- Load Dataset --------------------
-
-
 @st.cache_data
 def load_main_data():
     zip_path = "Dashboard/main_data.zip"
@@ -44,7 +42,6 @@ def load_main_data():
                 return pd.read_csv(f, low_memory=False)
     st.error("File main_data.zip tidak ditemukan.")
     return pd.DataFrame()
-
 
 main_df = load_main_data()
 
@@ -81,7 +78,7 @@ main_df["order_month"] = main_df["order_purchase_timestamp"].dt.to_period("M").a
 monthly_order = main_df.groupby("order_month")["order_id"].nunique()
 
 fig1, ax1 = plt.subplots(figsize=(12, 5))
-sns.lineplot(data=monthly_order, ax=ax1)
+sns.lineplot(data=monthly_order, ax=ax1, color="#4C72B0")
 ax1.set_title("Jumlah Pesanan per Bulan")
 ax1.set_xlabel("Bulan")
 ax1.set_ylabel("Jumlah Pesanan")
@@ -93,11 +90,13 @@ st.subheader("Distribusi Status Pesanan")
 if "order_status" in main_df.columns:
     order_status_count = main_df["order_status"].value_counts()
     fig2, ax2 = plt.subplots()
-    sns.barplot(x=order_status_count.index, y=order_status_count.values, ax=ax2)
+    sns.barplot(x=order_status_count.index, y=order_status_count.values, color="#4C72B0", ax=ax2)
     ax2.set_title("Distribusi Status Pesanan")
     ax2.set_ylabel("Jumlah")
+    ax2.set_xlabel("Status Pesanan")
     plt.xticks(rotation=45)
     st.pyplot(fig2)
+    st.markdown("Warna seragam digunakan agar fokus tetap pada perbandingan jumlah, bukan pada variasi warna.")
 
 # -------------------- Lokasi Pelanggan --------------------
 st.subheader("Distribusi Lokasi Pelanggan (Sample)")
@@ -119,11 +118,12 @@ st.subheader("Distribusi Skor Review Pelanggan")
 if "review_score" in main_df.columns and "review_comment_message" in main_df.columns:
     review_score_count = main_df["review_score"].value_counts().sort_index()
     fig3, ax3 = plt.subplots()
-    sns.barplot(x=review_score_count.index, y=review_score_count.values, palette='coolwarm', ax=ax3)
+    sns.barplot(x=review_score_count.index, y=review_score_count.values, color="#4C72B0", ax=ax3)
     ax3.set_title("Distribusi Skor Review")
     ax3.set_xlabel("Skor")
     ax3.set_ylabel("Jumlah")
     st.pyplot(fig3)
+    st.markdown("Visualisasi menggunakan warna tunggal agar tidak melanggar prinsip 'Distract'.")
 
     st.subheader("Wordcloud Ulasan Pelanggan")
     all_comments = " ".join(main_df["review_comment_message"].dropna().astype(str).tolist())
@@ -144,12 +144,13 @@ if "product_category_name_english" in main_df.columns:
     top_kategori = filtered_df["product_category_name_english"].value_counts().head(10)
 
     fig_kat, ax_kat = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=top_kategori.index, y=top_kategori.values, palette="Set2", ax=ax_kat)
+    sns.barplot(x=top_kategori.index, y=top_kategori.values, color="#69b3a2", ax=ax_kat)
     ax_kat.set_title("Kategori Produk dengan Pembelian Tertinggi")
     ax_kat.set_ylabel("Jumlah Pembelian")
     ax_kat.set_xlabel("Kategori Produk")
     ax_kat.tick_params(axis='x', rotation=45)
-
+    st.pyplot(fig_kat)
+    st.markdown("Gunakan warna hijau netral yang konsisten dan tidak mencolok agar informasi tetap utama.")
 
     st.subheader("Ekspor Data")
     if st.button("Download Top Kategori CSV"):
