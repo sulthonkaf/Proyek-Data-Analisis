@@ -73,9 +73,25 @@ Atau digunakan langsung di kode dengan `requests.get(...)` dan link berikut:
 | **Pelanggan**   | Segmentasi RFM menunjukkan mayoritas pelanggan berada di segmen **Mid Value**, diikuti **Low Value**, dan terakhir **High Value**. Ini menunjukkan potensi besar untuk meningkatkan loyalitas pelanggan menengah. |
 | **Waktu Order** | Hari dengan transaksi terbanyak adalah **Senin–Selasa**, dan bulan dengan volume tertinggi adalah **Agustus**, dengan total **12.575 pesanan**. Aktivitas belanja paling rendah terjadi pada akhir pekan. |
 
-### Ilustrasi Segmentasi Pelanggan
+### Ilustrasi Analisis
 
-![Segmentasi Pelanggan Berdasarkan RFM](Assets/segmentasi.png)
+#### 1. Jumlah Transaksi per Bulan
+
+![Jumlah Transaksi per Bulan](Assets/transaksi_per_bulan.png)
+
+Visualisasi distribusi jumlah transaksi per bulan dalam setahun menunjukkan tren musiman dan volume penjualan yang berfluktuasi setiap bulannya.
+
+#### 2. Korelasi Durasi Pengiriman vs Review Score
+
+![Korelasi Pengiriman dan Review](Assets/korelasi.png)
+
+Terdapat korelasi negatif antara lamanya pengiriman dengan skor review pelanggan. Semakin lama pengiriman, cenderung semakin rendah skor ulasan yang diberikan oleh pelanggan.
+
+#### 3. Segmentasi Pelanggan Berdasarkan RFM
+
+![Segmentasi Pelanggan RFM](Assets/segmentasi.png)
+
+Mayoritas pelanggan berada dalam kategori **Mid Value**, yaitu pelanggan dengan frekuensi dan nilai transaksi sedang, namun belum tergolong loyal atau potensial tinggi.
 
 ### 3. Jalankan Dashboard
 
