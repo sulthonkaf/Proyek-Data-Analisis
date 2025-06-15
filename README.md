@@ -1,10 +1,11 @@
 
 # Proyek Analisis Data: E-Commerce Behavior & Loyalty Dashboard
 
-![GitHub Repo stars](https://img.shields.io/github/stars/sulthonkaf/dbs-codingcamp-2025?style=social)
-![Last Commit](https://img.shields.io/github/last-commit/sulthonkaf/dbs-codingcamp-2025)
-![GitHub issues](https://img.shields.io/github/issues/sulthonkaf/dbs-codingcamp-2025)
-![GitHub license](https://img.shields.io/github/license/sulthonkaf/dbs-codingcamp-2025)
+![GitHub Repo stars](https://img.shields.io/github/stars/sulthonkaf/Proyek-Data-Analisis?style=social)
+![Last Commit](https://img.shields.io/github/last-commit/sulthonkaf/Proyek-Data-Analisis)
+![GitHub issues](https://img.shields.io/github/issues/sulthonkaf/Proyek-Data-Analisis)
+![GitHub license](https://img.shields.io/github/license/sulthonkaf/Proyek-Data-Analisis)
+
 
 ---
 
