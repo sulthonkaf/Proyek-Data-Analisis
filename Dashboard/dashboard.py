@@ -34,8 +34,7 @@ Dashboard ini dibuat untuk menganalisis dataset publik E-Commerce Brazil, melipu
 # -------------------- Load Dataset --------------------
 @st.cache_data
 def load_main_data():
-    current_dir = os.path.dirname(__file__)
-    data_path = os.path.join(current_dir, "main_data.csv")
+    data_path = "Dashboard/main_data.csv"  
     if os.path.exists(data_path):
         return pd.read_csv(data_path, low_memory=False)
     st.error("File main_data.csv tidak ditemukan di " + data_path)
