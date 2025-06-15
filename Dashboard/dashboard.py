@@ -100,18 +100,31 @@ if "order_status" in main_df.columns:
 
 # -------------------- Lokasi Pelanggan --------------------
 st.subheader("Distribusi Lokasi Pelanggan (Sample)")
-if "geolocation_lat" in main_df.columns and "geolocation_lng" in main_df.columns:
-    geo_df = main_df.dropna(subset=["geolocation_lat", "geolocation_lng"]).sample(1000)
-    m = folium.Map(location=[-14.2, -51.9], zoom_start=4)
-    for _, row in geo_df.iterrows():
-        folium.CircleMarker(
-            location=[row["geolocation_lat"], row["geolocation_lng"]],
-            radius=1,
-            color="blue",
-            fill=True,
-            fill_opacity=0.5
-        ).add_to(m)
-    st_folium(m, width=700, height=450)
+
+# Coba cari nama kolom latitude & longitude
+lat_col = next((col for col in main_df.columns if 'lat' in col.lower()), None)
+lng_col = next((col for col in main_df.columns if 'lng' in col.lower() or 'lon' in col.lower()), None)
+
+if lat_col and lng_col:
+    geo_df = main_df.dropna(subset=[lat_col, lng_col])
+    if not geo_df.empty:
+        geo_df = geo_df.sample(min(1000, len(geo_df)))
+        m = folium.Map(location=[-14.2, -51.9], zoom_start=4)
+        for _, row in geo_df.iterrows():
+            folium.CircleMarker(
+                location=[row[lat_col], row[lng_col]],
+                radius=1,
+                color="blue",
+                fill=True,
+                fill_opacity=0.5
+            ).add_to(m)
+        st.markdown(f"Menampilkan peta interaktif dengan sampel {len(geo_df)} titik lokasi pelanggan.")
+        st_folium(m, width=700, height=450)
+    else:
+        st.info("Tidak ada data lokasi yang valid untuk ditampilkan.")
+else:
+    st.warning("Kolom latitude/longitude tidak ditemukan dalam dataset.")
+
 
 # -------------------- Review dan Wordcloud --------------------
 st.subheader("Distribusi Skor Review Pelanggan")
