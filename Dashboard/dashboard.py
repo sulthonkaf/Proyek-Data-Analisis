@@ -35,23 +35,31 @@ Dashboard ini dibuat untuk menganalisis dataset publik E-Commerce Brazil, melipu
 # -------------------- Load Dataset Tunggal --------------------
 @st.cache_data
 def load_main_data():
-    path1 = os.path.join("dashboard/", "main_data.csv")
-    path2 = os.path.join("dashboard/", "main_data.csv")
-    if os.path.exists(path1):
-        return pd.read_csv(path1, low_memory=False)
-    elif os.path.exists(path2):
-        return pd.read_csv(path2, low_memory=False)
-    else:
-        st.error("File main_data.csv tidak ditemukan.")
-        return pd.DataFrame()
+    current_dir = os.path.dirname(__file__)
+    data_path = os.path.join(current_dir, "main_data.csv")
+    if os.path.exists(data_path):
+        return pd.read_csv(data_path, low_memory=False)
+    st.error("File main_data.csv tidak ditemukan di " + data_path)
+    return pd.DataFrame()
+# @st.cache_data
+# def load_main_data():
+#     path1 = os.path.join("dashboard/", "main_data.csv")
+#     path2 = os.path.join("dashboard/", "main_data.csv")
+#     if os.path.exists(path1):
+#         return pd.read_csv(path1, low_memory=False)
+#     elif os.path.exists(path2):
+#         return pd.read_csv(path2, low_memory=False)
+#     else:
+#         st.error("File main_data.csv tidak ditemukan.")
+#         return pd.DataFrame()
 
-main_df = load_main_data()
+# main_df = load_main_data()
 
-if main_df.empty or "order_purchase_timestamp" not in main_df.columns:
-    st.error("Dataset tidak valid atau kolom waktu tidak ditemukan.")
-    st.stop()
+# if main_df.empty or "order_purchase_timestamp" not in main_df.columns:
+#     st.error("Dataset tidak valid atau kolom waktu tidak ditemukan.")
+#     st.stop()
 
-main_df["order_purchase_timestamp"] = pd.to_datetime(main_df["order_purchase_timestamp"])
+# main_df["order_purchase_timestamp"] = pd.to_datetime(main_df["order_purchase_timestamp"])
 
 # -------------------- Filter Waktu --------------------
 st.sidebar.header("Filter Waktu")
