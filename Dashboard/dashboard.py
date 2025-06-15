@@ -9,27 +9,32 @@ from io import StringIO, BytesIO
 import zipfile
 import requests
 
-# -----------------------------------------------
+# -------------------- Konfigurasi Dashboard --------------------
 st.set_page_config(page_title="E-Commerce Dashboard", layout="wide")
 st.title(" E-Commerce Public Dataset Dashboard")
 st.markdown("Visualisasi interaktif untuk memahami data transaksi, kategori produk, dan perilaku pelanggan.")
 
-# -----------------------------------------------
-# Load dataset from Google Drive ZIP
+# -------------------- Fungsi Load ZIP --------------------
 @st.cache_data
 def load_from_zip(filename):
-    zip_url = "https://drive.google.com/uc?id=1nqjOKZHixgbfX9sBmAa3DxWCpFrsudqk"  # Your public Google Drive file ID
+    zip_url = "https://drive.google.com/uc?export=download&id=1nqjOKZHixgbfX9sBmAa3DxWCpFrsudqk"
     response = requests.get(zip_url)
-    z = zipfile.ZipFile(BytesIO(response.content))
-    return pd.read_csv(z.open(filename), low_memory=False)
 
-# Load orders data
+    # Cek apakah kontennya file ZIP atau bukan
+    if "text/html" in response.headers.get("Content-Type", ""):
+        st.error("❌ Gagal mengunduh ZIP. Pastikan file di Google Drive bersifat publik (Anyone with the link).")
+        st.stop()
+
+    with zipfile.ZipFile(BytesIO(response.content)) as z:
+        return pd.read_csv(z.open(filename), low_memory=False)
+
+
+# -------------------- Load Dataset --------------------
 orders_df = load_from_zip("orders_dataset.csv")
 orders_df["order_purchase_timestamp"] = pd.to_datetime(orders_df["order_purchase_timestamp"])
 
-# -----------------------------------------------
+# -------------------- Filter Tanggal --------------------
 st.sidebar.header(" Filter Waktu")
-
 min_date = orders_df["order_purchase_timestamp"].min()
 max_date = orders_df["order_purchase_timestamp"].max()
 date_range = st.sidebar.date_input("Rentang Tanggal", [min_date, max_date])
@@ -40,14 +45,14 @@ if len(date_range) == 2:
         (orders_df["order_purchase_timestamp"] <= pd.to_datetime(date_range[1]))
     ]
 
-# -----------------------------------------------
+# -------------------- Ringkasan Dataset --------------------
 st.subheader(" Ringkasan Dataset")
 col1, col2, col3 = st.columns(3)
 col1.metric("Jumlah Pesanan", orders_df["order_id"].nunique())
 col2.metric("Jumlah Pelanggan", orders_df["customer_id"].nunique())
 col3.metric("Rentang Tanggal", f"{min_date.date()} → {max_date.date()}")
 
-# -----------------------------------------------
+# -------------------- Volume Transaksi Bulanan --------------------
 st.subheader(" Volume Transaksi per Bulan")
 orders_df["order_month"] = orders_df["order_purchase_timestamp"].dt.to_period("M").astype(str)
 monthly_order = orders_df.groupby("order_month")["order_id"].nunique()
@@ -60,7 +65,7 @@ ax1.set_ylabel("Jumlah Pesanan")
 plt.xticks(rotation=45)
 st.pyplot(fig1)
 
-# -----------------------------------------------
+# -------------------- Status Pesanan --------------------
 st.subheader(" Distribusi Status Pesanan")
 order_status_count = orders_df["order_status"].value_counts()
 
@@ -71,7 +76,7 @@ ax2.set_ylabel("Jumlah")
 plt.xticks(rotation=45)
 st.pyplot(fig2)
 
-# -----------------------------------------------
+# -------------------- Lokasi Pelanggan --------------------
 st.subheader(" Distribusi Lokasi Pelanggan (Sample)")
 geo_df = load_from_zip("geolocation_dataset.csv").dropna().sample(1000)
 m = folium.Map(location=[-14.2, -51.9], zoom_start=4)
@@ -87,7 +92,7 @@ for _, row in geo_df.iterrows():
 
 st_folium(m, width=700, height=450)
 
-# -----------------------------------------------
+# -------------------- Review Skor & Wordcloud --------------------
 st.subheader(" Distribusi Skor Review Pelanggan")
 reviews_df = load_from_zip("order_reviews_dataset.csv")
 
@@ -112,12 +117,12 @@ if 'review_score' in reviews_df.columns and 'review_comment_message' in reviews_
 else:
     st.warning("Kolom `review_score` dan `review_comment_message` tidak tersedia dalam dataset saat ini.")
 
-# -----------------------------------------------
+# -------------------- Kategori Produk Terlaris --------------------
 st.sidebar.header(" Filter Kategori Produk")
 products_df = load_from_zip("products_dataset.csv")
 translation_df = load_from_zip("product_category_name_translation.csv")
 
-# Merge untuk mendapatkan nama kategori English
+# Merge untuk dapatkan nama English
 products_df = products_df.merge(translation_df, how='left', on='product_category_name')
 
 # Gabungkan ke orders
@@ -139,7 +144,7 @@ ax_kat.set_xlabel("Jumlah Pembelian")
 ax_kat.set_ylabel("Kategori")
 st.pyplot(fig_kat)
 
-# -----------------------------------------------
+# -------------------- Ekspor CSV --------------------
 st.subheader("⬇️ Ekspor Data")
 if st.button("💾 Download Top Kategori CSV"):
     csv_data = top_kategori.reset_index()
@@ -153,6 +158,6 @@ if st.button("💾 Download Top Kategori CSV"):
         mime="text/csv"
     )
 
-# -----------------------------------------------
+# -------------------- Footer --------------------
 st.markdown("---")
 st.caption(" Dibuat oleh **Sulthon Kaffaah** – DBS Coding Camp 2025")
