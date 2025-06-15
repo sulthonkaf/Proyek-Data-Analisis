@@ -154,25 +154,26 @@ if "product_category_name_english" in main_df.columns:
     filtered_df = main_df[main_df["product_category_name_english"].isin(selected_kategori)] if selected_kategori else main_df
 
     st.subheader("Top 10 Kategori Produk Terlaris")
-    top_kategori = filtered_df["product_category_name_english"].value_counts().head(10)
+    kategori_terlaris = filtered_df["product_category_name_english"].value_counts().head(10)
 
-    fig_kat, ax_kat = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=top_kategori.index, y=top_kategori.values, color="#69b3a2", ax=ax_kat)
-    ax_kat.set_title("Kategori Produk dengan Pembelian Tertinggi")
-    ax_kat.set_ylabel("Jumlah Pembelian")
-    ax_kat.set_xlabel("Kategori Produk")
-    ax_kat.tick_params(axis='x', rotation=45)
+    fig, ax = plt.subplots(figsize=(12, 6))
+    kategori_terlaris.plot(kind='bar', color='skyblue', edgecolor='black', ax=ax)
 
-    # Tambahkan label angka di atas bar
-    for i, v in enumerate(top_kategori.values):
-        ax_kat.text(i, v + 100, str(v), ha='center', fontsize=9)
+    for i, v in enumerate(kategori_terlaris):
+        ax.text(i, v + 50, str(v), ha='center', fontsize=10)
 
-    st.pyplot(fig_kat)
-    st.markdown("Visualisasi menggunakan warna netral dan orientasi vertikal agar memudahkan pembacaan dan menghindari gangguan visual.")
+    ax.set_title('Top 10 Kategori Produk yang Paling Sering Dibeli', fontsize=14)
+    ax.set_ylabel('Jumlah Pembelian')
+    ax.set_xlabel('Kategori Produk')
+    ax.tick_params(axis='x', rotation=45)
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+    plt.tight_layout()
+    st.pyplot(fig)
 
     st.subheader("Ekspor Data")
     if st.button("Download Top Kategori CSV"):
-        csv_data = top_kategori.reset_index()
+        csv_data = kategori_terlaris.reset_index()
         csv_data.columns = ['product_category', 'purchase_count']
         csv_buffer = StringIO()
         csv_data.to_csv(csv_buffer, index=False)
@@ -182,6 +183,7 @@ if "product_category_name_english" in main_df.columns:
             file_name="top_kategori_produk.csv",
             mime="text/csv"
         )
+
 
 
 # -------------------- Footer --------------------
