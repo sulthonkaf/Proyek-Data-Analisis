@@ -77,7 +77,7 @@ Atau digunakan langsung di kode dengan `requests.get(...)` dan link berikut:
 
 #### 1. Jumlah Transaksi per Bulan
 
-![Jumlah Transaksi per Bulan](Assets/transaksi_per_bulan.png)
+![Jumlah Transaksi per Bulan](Assets/distribusi.png)
 
 Visualisasi distribusi jumlah transaksi per bulan dalam setahun menunjukkan tren musiman dan volume penjualan yang berfluktuasi setiap bulannya.
 
