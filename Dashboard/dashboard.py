@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -32,7 +31,7 @@ Dashboard ini dibuat untuk menganalisis dataset publik E-Commerce Brazil, melipu
 - Visualisasi geolokasi pelanggan  
 """)
 
-# -------------------- Load Dataset Tunggal --------------------
+# -------------------- Load Dataset --------------------
 @st.cache_data
 def load_main_data():
     current_dir = os.path.dirname(__file__)
@@ -146,7 +145,6 @@ if "product_category_name_english" in main_df.columns:
     ax_kat.set_ylabel("Kategori")
     st.pyplot(fig_kat)
 
-    # -------------------- Ekspor CSV --------------------
     st.subheader("Ekspor Data")
     if st.button("Download Top Kategori CSV"):
         csv_data = top_kategori.reset_index()
